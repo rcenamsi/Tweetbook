@@ -11,6 +11,9 @@ namespace Tweetbook.Services.Interface
         Post GetPostById(Guid postId);
 
         bool UpdatePost(Post updatePost);
+        
+        bool DeletePost(Guid postId);
+        
 
     }
 }
