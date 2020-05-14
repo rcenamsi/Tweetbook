@@ -58,5 +58,21 @@ namespace Tweetbook.v1.Controllers
             
             return Ok(post);
         }
+        
+        [HttpPut(ApiRoutes.Posts.Update)]
+        public IActionResult Update([FromRoute] Guid postId, [FromBody] UpdatePostRequest request)
+        {
+            var post = new Post
+            {
+                Id = postId,
+                Name = request.Name
+            };
+
+            var isUpdated = _postService.UpdatePost(post);
+            if (isUpdated)
+                return Ok(post);
+
+            return NotFound();
+        }
     }
 }
