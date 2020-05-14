@@ -9,7 +9,7 @@
         {
             public const string GetAll = Base + "/posts";
             public const string Create = Base + "/posts";
-            public const string Get = Base + "/posts/id?{postId}";
+            public const string Get = Base + "/posts/{postId}";
         }
     }
 }
