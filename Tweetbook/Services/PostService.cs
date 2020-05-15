@@ -11,7 +11,6 @@ namespace Tweetbook.Services
 {
     public class PostService : IPostService
     {
-        private readonly List<Post> _posts;
         private readonly DataContext _dataContext;
         
         public PostService(DataContext dataContext)
