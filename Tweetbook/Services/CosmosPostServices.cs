@@ -72,5 +72,10 @@ namespace Tweetbook.Services
             post.Id = Guid.Parse(cosmosPost.Id);
             return response.IsSuccess;
         }
+
+        public Task<bool> UserOwnPostAsync(Guid postId, string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

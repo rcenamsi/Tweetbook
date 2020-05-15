@@ -18,5 +18,6 @@ namespace Tweetbook.Services.Interface
         Task<bool> CreatePostAsync(Post post);
 
 
+        Task<bool> UserOwnPostAsync(Guid postId, string userId);
     }
 }
