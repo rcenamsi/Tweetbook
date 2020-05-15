@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Tweetbook.Options;
+using Tweetbook.Services;
+using Tweetbook.Services.Interface;
 
 namespace Tweetbook.Installers
 {
@@ -15,6 +17,8 @@ namespace Tweetbook.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IIdentityService, IdentityService>();
+            
             services.AddMvc(opt => opt.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
            
