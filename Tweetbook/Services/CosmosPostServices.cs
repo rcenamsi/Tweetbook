@@ -77,5 +77,10 @@ namespace Tweetbook.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<Tag>> GetAllTagsAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

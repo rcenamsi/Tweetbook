@@ -19,5 +19,7 @@ namespace Tweetbook.Services.Interface
 
 
         Task<bool> UserOwnPostAsync(Guid postId, string userId);
+        
+        Task<List<Tag>> GetAllTagsAsync();
     }
 }

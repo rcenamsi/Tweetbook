@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -31,20 +32,22 @@ namespace Tweetbook.Services
         public async Task<AuthenticationResult> RegisterAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
+            if (user != null)
             {
                 return new AuthenticationResult
                 {
                     Errors = new[] {"User does not exists."}
                 };
             }
-            
+
+            var newUserId = Guid.NewGuid();
             var newUser = new IdentityUser
             {
+                Id = newUserId.ToString(),
                 Email = email,
                 UserName = email,
             };
-
+            
             var created = await _userManager.CreateAsync(newUser, password);
             if (!created.Succeeded)
             {
@@ -54,6 +57,7 @@ namespace Tweetbook.Services
                 };
             }
             
+            await _userManager.AddClaimAsync(newUser, new Claim("tags.view", "true"));
             return await GenerateAuthenticationResultForUserAsync(newUser);
         }
         
@@ -186,15 +190,22 @@ namespace Tweetbook.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("id", user.Id),
+            };
+
+            var userClaim = await _userManager.GetClaimsAsync(user);
+            claims.AddRange(userClaim);
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim("id", user.Id),
-                }),
+                Subject = new ClaimsIdentity(claims),
+                
                 Expires = DateTime.UtcNow.Add(_jwtSettings.TokenLifetime),
                 SigningCredentials =
                     new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

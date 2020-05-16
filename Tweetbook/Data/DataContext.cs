@@ -15,5 +15,17 @@ namespace Tweetbook.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         
+        public DbSet<Tag> Tags { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<PostTag>().Ignore(t => t.Post)
+                .HasKey(k => new
+                {
+                    k.PostId,
+                    k.TagName
+                });
+        }
     }
 }
