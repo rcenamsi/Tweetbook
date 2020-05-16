@@ -1,4 +1,4 @@
-﻿FROM microsoft/dotnet:3.1-sdk as build
+﻿FROM microsoft/dotnet:3.0-sdk as build
 
 ARG BUILDCONFIG=RELEASE
 ARG VERSION=1.0.0
